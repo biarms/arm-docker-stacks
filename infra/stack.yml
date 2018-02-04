@@ -1,0 +1,40 @@
+version: '3.4'
+
+services:
+  portainer:
+    image: ${DOCKER_REGISTRY}portainer/portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer-data:/data
+    ports:
+      - 9000:9000
+    command: --host unix:///var/run/docker.sock --no-auth
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 64M
+  cadvisior:
+    image: ${DOCKER_REGISTRY}braingamer/cadvisor-arm:latest #TODO: use biarms clone or google/cadvisor, when it will exists...
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    ports:
+      - 9001:8080
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 64M
+
+volumes:
+  portainer-data:
