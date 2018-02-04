@@ -1,6 +1,6 @@
 SHELL=bash
 .SHELLFLAGS=-e
-DOCKER_STACK_ID=wordpress
+DOCKER_STACK_ID=biarms-wordpress
 
 default: deploy
 

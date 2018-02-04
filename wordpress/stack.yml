@@ -4,15 +4,15 @@ services:
   wordpress-db:
     image: ${DOCKER_REGISTRY}biarms/mysql:5.5 #5.5 is for backward compatibility with RPI1 (arm32v6). 5.7 is maybe better for RPI2 or RPI3 (arm32v7)
     volumes:
-      - db_data:/var/lib/mysql
+      - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/wordpress_db_root_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
-      MYSQL_PASSWORD_FILE: /run/secrets/wordpress_db_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
     secrets:
-      - wordpress_db_root_password
-      - wordpress_db_password
+      - db_root_password
+      - db_password
     deploy:
       replicas: 1
 
@@ -25,10 +25,10 @@ services:
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/wordpress_db_password
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
       WORDPRESS_DB_NAME: wordpress
     secrets:
-      - wordpress_db_password
+      - db_password
     deploy:
       replicas: 1
 
@@ -44,14 +44,14 @@ services:
     #    replicas: 0
 
 volumes:
-  db_data:
+  db-data:
   htdocs:
 
 # Inspired by https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose
 secrets:
-  wordpress_db_password:
+  db_password:
     file: db_password.txt
-  wordpress_db_root_password:
+  db_root_password:
     file: db_root_password.txt
 
 # Next steps: create a cluster (see https://severalnines.com/blog/mysql-docker-introduction-docker-swarm-mode-and-multi-host-networking)

@@ -1,5 +1,5 @@
 #!/bin/bash
-export DOCKER_STACK_ID='wordpress'
+export DOCKER_STACK_ID='biarms-wordpress'
 
 check() {
 	which docker > /dev/null || (echo "docker utility must be in your path." && exit 1)
