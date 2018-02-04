@@ -21,7 +21,7 @@ services:
     volumes:
       - htdocs:/var/www/html
     ports:
-      - 9006:80
+      - 8050:80
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
