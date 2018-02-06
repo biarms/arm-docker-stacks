@@ -28,7 +28,7 @@ services:
     ports:
       - 9001:8080
     deploy:
-      replicas: 1
+      replicas: 0
       restart_policy:
         condition: on-failure
       resources:
