@@ -1,5 +1,5 @@
 SHELL=bash
-.SHELLFLAGS=-e
+# NOK on linux: .SHELLFLAGS=-e
 
 default: deploy
 
