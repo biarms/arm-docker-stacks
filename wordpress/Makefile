@@ -1,5 +1,6 @@
 SHELL=bash
-.SHELLFLAGS=-e
+# NOK on linux: .SHELLFLAGS=-e
+
 DOCKER_STACK_ID=biarms-wordpress
 
 default: deploy
