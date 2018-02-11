@@ -21,7 +21,7 @@ services:
     volumes:
       - htdocs:/var/www/html
     ports:
-      - 8050:80
+      - 80
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
@@ -32,16 +32,15 @@ services:
     deploy:
       replicas: 1
 
-    ##Inspired from https://github.com/vimagick/dockerfiles/blob/master/phpmyadmin/arm/docker-compose.yml
-    #wordpress-phpmyadmin:
-    #  image: ${DOCKER_REGISTRY}easypi/phpmyadmin-arm
-    #  ports:
-    #    - 9005:80
-    #  environment:
-    #    - PMA_HOST=wordpress-db
-    #    - PMA_PORT=3306
-    #  deploy:
-    #    replicas: 0
+  wordpress-phpmyadmin:
+    image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.7.7
+    ports:
+      - 80
+    environment:
+      - PMA_HOST=wordpress-db
+      - PMA_PORT=3306
+    deploy:
+      replicas: 0
 
 volumes:
   db-data:
