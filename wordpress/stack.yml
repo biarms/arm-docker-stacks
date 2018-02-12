@@ -6,13 +6,13 @@ services:
     volumes:
       - db-data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
-      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db-password
     secrets:
-      - db_root_password
-      - db_password
+      - db-root-password
+      - db-password
     deploy:
       replicas: 1
 
@@ -25,10 +25,10 @@ services:
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_password
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db-password
       WORDPRESS_DB_NAME: wordpress
     secrets:
-      - db_password
+      - db-password
     deploy:
       replicas: 1
 
@@ -48,9 +48,9 @@ volumes:
 
 # Inspired by https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose
 secrets:
-  db_password:
-    file: db_password.txt
-  db_root_password:
-    file: db_root_password.txt
+  db-password:
+    file: db-password.txt
+  db-root-password:
+    file: db-root-password.txt
 
 # Next steps: create a cluster (see https://severalnines.com/blog/mysql-docker-introduction-docker-swarm-mode-and-multi-host-networking)

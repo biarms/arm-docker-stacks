@@ -1,7 +1,7 @@
 SHELL=bash
 # NOK on linux: .SHELLFLAGS=-e
 
-DOCKER_STACK_ID=biarms-wordpress
+DOCKER_STACK_ID=biarms-gogs
 
 default: deploy
 
@@ -11,7 +11,6 @@ check:
 
 createSecret: check
 	if [ ! -f db-password.txt ] ; then pwgen -1 32 > db-password.txt; fi
-	if [ ! -f db-root-password.txt ] ; then pwgen -1 32 > db-root-password.txt; fi
 
 deploy: createSecret
 	docker stack deploy -c stack.yml $(DOCKER_STACK_ID)

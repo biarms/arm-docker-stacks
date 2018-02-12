@@ -1,0 +1,43 @@
+version: '3.4'
+
+services:
+  gogs:
+    image: ${DOCKER_REGISTRY}gogs/gogs-rpi
+    volumes:
+     - gogs-data:/data
+    ports:
+     - 10022:22
+     - 3000
+    deploy:
+      replicas: 1
+
+  postgres:
+    image: ${DOCKER_REGISTRY}postgres:10.2
+    environment:
+      POSTGRES_USER: gogs
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_DB: gogs
+    volumes:
+     - db-data:/var/lib/postgresql/data
+    secrets:
+     - db-password
+    deploy:
+      replicas: 1
+
+  db-admin:
+    image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
+    volumes:
+     - pgadmin-data:/pgadmin
+    ports:
+     - 5050
+    deploy:
+      replicas: 0
+
+volumes:
+  gogs-data:
+  db-data:
+  pgadmin-data:
+
+secrets:
+  db-password:
+    file: db-password.txt
