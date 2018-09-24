@@ -42,6 +42,8 @@ services:
     deploy:
       replicas: 0
 
+   # https://hub.docker.com/r/arm32v6/adminer/
+
 volumes:
   db-data:
   htdocs:
