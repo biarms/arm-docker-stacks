@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f stack.yml
+    kompose.version: 1.1.0 (36652f6)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: wordpress-phpmyadmin
+  name: wordpress-phpmyadmin
+spec:
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: wordpress-phpmyadmin
+    spec:
+      containers:
+      - env:
+        - name: PMA_HOST
+          value: wordpress-db
+        - name: PMA_PORT
+          value: "3306"
+        image: biarms/phpmyadmin:4.7.7
+        name: wordpress-phpmyadmin
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+status: {}
