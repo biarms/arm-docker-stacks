@@ -28,7 +28,7 @@ spec:
           value: /run/secrets/db-passwords/db-password.txt
         - name: WORDPRESS_DB_USER
           value: wordpress
-        image: biarms/wordpress:4.9.2
+        image: biarms/wordpress:4.9.8
         name: wordpress
         ports:
         - containerPort: 80

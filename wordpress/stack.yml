@@ -19,7 +19,7 @@ services:
       replicas: 1
 
   wordpress:
-    image: ${DOCKER_REGISTRY}biarms/wordpress:4.9.2
+    image: ${DOCKER_REGISTRY}biarms/wordpress:4.9.8
     volumes:
       - htdocs:/var/www/html
     ports:
@@ -35,7 +35,7 @@ services:
       replicas: 1
 
   wordpress-phpmyadmin:
-    image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.7.7
+    image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.8.3
     ports:
       - 80
     environment:
