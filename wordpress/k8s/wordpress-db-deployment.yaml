@@ -23,9 +23,9 @@ spec:
         - name: MYSQL_DATABASE
           value: wordpress
         - name: MYSQL_PASSWORD_FILE
-          value: /run/secrets/db-passwords/db-password.txt
+          value: /run/secrets/db-passwords/db-password-wordpress
         - name: MYSQL_ROOT_PASSWORD_FILE
-          value: /run/secrets/db-passwords/db-root-password.txt
+          value: /run/secrets/db-passwords/db-password-root
         - name: MYSQL_USER
           value: wordpress
         image: biarms/mysql:5.5
@@ -35,16 +35,16 @@ spec:
         resources: {}
         volumeMounts:
         - mountPath: /var/lib/mysql
-          name: db-data
+          name: wordpress-db-data
         - mountPath: "/run/secrets/db-passwords"
-          name: db-passwords
+          name: wordpress-db-passwords
           readOnly: true
       restartPolicy: Always
       volumes:
-      - name: db-data
+      - name: wordpress-db-data
         persistentVolumeClaim:
-          claimName: db-data
-      - name: db-passwords
+          claimName: wordpress-db-data
+      - name: wordpress-db-passwords
         secret:
-          secretName: db-passwords
+          secretName: wordpress-db-passwords
 status: {}

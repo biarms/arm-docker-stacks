@@ -3,8 +3,8 @@ kind: PersistentVolumeClaim
 metadata:
   creationTimestamp: null
   labels:
-    io.kompose.service: db-data
-  name: db-data
+    io.kompose.service: wordpress-db-data
+  name: wordpress-db-data
 spec:
   accessModes:
   - ReadWriteOnce

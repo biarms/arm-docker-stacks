@@ -14,7 +14,7 @@ spec:
   - name: "80"
     port: 80
     targetPort: 80
-    nodePort: 30080
+    nodePort: 30090
   selector:
     io.kompose.service: wordpress-phpmyadmin
 status:
