@@ -23,7 +23,7 @@ spec:
           value: wordpress-db
         - name: PMA_PORT
           value: "3306"
-        image: biarms/phpmyadmin:4.7.7
+        image: biarms/phpmyadmin:4.8.3
         name: wordpress-phpmyadmin
         ports:
         - containerPort: 80
