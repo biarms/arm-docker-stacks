@@ -10,9 +10,12 @@ check:
 createSecret: check
 	if [ ! -f db-password-root ] ; then pwgen -1 64 > db-password-root; fi
 	if [ ! -f db-password-wordpress ] ; then pwgen -1 32 > db-password-wordpress; fi
+	kubectl create secret generic wordpress-db-passwords --from-file=./db-password-root --from-file=./db-password-wordpress
 
 deploy: createSecret
-	kubectl create secret generic wordpress-db-passwords --from-file=./db-password-root --from-file=./db-password-wordpress
+	kubectl apply -f .
+
+redeploy: check
 	kubectl apply -f .
 
 undeploy: check
@@ -22,4 +25,4 @@ undeploy: check
 info: check
 	kubectl get services
 
-redeploy: undeploy deploy
+full-redeploy: undeploy deploy

@@ -28,7 +28,9 @@ spec:
           value: /run/secrets/db-passwords/db-password-root
         - name: MYSQL_USER
           value: wordpress
-        image: biarms/mysql:5.5
+        #image: mysql/mysql-server:8.0-aarch64: NOK
+        #image: biarms/mysql:5.5.61-linux-aarch64: OK
+        image: biarms/mysql:5.5 # OK
         name: wordpress-db
         ports:
         - containerPort: 3306
