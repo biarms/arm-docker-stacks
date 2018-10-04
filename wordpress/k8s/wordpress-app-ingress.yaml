@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wordpress
+  labels:
+    io.kompose.service: wordpress
+spec:
+  rules:
+  - host: "wordpress.okrhome.lan"
+    http:
+      paths:
+       - backend:
+          serviceName: "wordpress"
+          servicePort: 80
