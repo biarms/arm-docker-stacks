@@ -18,16 +18,16 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/db-password
       POSTGRES_DB: gogs
     volumes:
-     - db-data:/var/lib/postgresql/data
+     - gogs-db-data:/var/lib/postgresql/data
     secrets:
-     - db-password
+     - gogs-db-password
     deploy:
       replicas: 1
 
   db-admin:
     image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
     volumes:
-     - pgadmin-data:/pgadmin
+     - gogs-pgadmin-data:/pgadmin
     ports:
      - 5050
     deploy:
@@ -35,9 +35,9 @@ services:
 
 volumes:
   gogs-data:
-  db-data:
-  pgadmin-data:
+  gogs-db-data:
+  gogs-pgadmin-data:
 
 secrets:
-  db-password:
+  gogs-db-password:
     file: db-password.txt
