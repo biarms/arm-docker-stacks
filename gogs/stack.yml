@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3'
 
 services:
   gogs:
@@ -11,7 +11,7 @@ services:
     deploy:
       replicas: 1
 
-  postgres:
+  gogs-postgres:
     image: ${DOCKER_REGISTRY}postgres:10.2
     environment:
       POSTGRES_USER: gogs
@@ -19,12 +19,14 @@ services:
       POSTGRES_DB: gogs
     volumes:
      - gogs-db-data:/var/lib/postgresql/data
+    ports:
+      - 5432
     secrets:
      - gogs-db-password
     deploy:
       replicas: 1
 
-  db-admin:
+  gogs-db-admin:
     image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
     volumes:
      - gogs-pgadmin-data:/pgadmin

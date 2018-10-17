@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gogs
+  labels:
+    io.kompose.service: gogs
+spec:
+  rules:
+  - host: "gogs.okrhome.lan"
+    http:
+      paths:
+       - backend:
+          serviceName: "gogs"
+          servicePort: 80

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: gogs-db-admin
+  name: gogs-db-admin
+spec:
+  ports:
+  - name: "5050"
+    port: 5050
+    targetPort: 5050
+  selector:
+    io.kompose.service: gogs-db-admin
+status:
+  loadBalancer: {}

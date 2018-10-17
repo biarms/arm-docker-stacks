@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: gogs-db-admin
+  name: gogs-db-admin
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gogs-db-admin
+    spec:
+      containers:
+      - image: biarms/pgadmin4:2.1
+        name: gogs-db-admin
+        ports:
+        - containerPort: 5050
+        resources: {}
+        volumeMounts:
+        - mountPath: /pgadmin
+          name: gogs-pgadmin-data
+      restartPolicy: Always
+      volumes:
+      - name: gogs-pgadmin-data
+        persistentVolumeClaim:
+          claimName: gogs-pgadmin-data
+status: {}

@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: gogs
+  name: gogs
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: gogs
+    spec:
+      containers:
+      - image: gogs/gogs-rpi
+        name: gogs
+        ports:
+        - containerPort: 22
+        - containerPort: 3000
+        resources: {}
+        volumeMounts:
+        - mountPath: /data
+          name: gogs-data
+      restartPolicy: Always
+      volumes:
+      - name: gogs-data
+        persistentVolumeClaim:
+          claimName: gogs-data
+status: {}
