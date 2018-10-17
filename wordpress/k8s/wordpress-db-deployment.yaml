@@ -1,10 +1,6 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f stack.yml
-    kompose.version: 1.1.0 (36652f6)
-  creationTimestamp: null
   labels:
     io.kompose.service: wordpress-db
   name: wordpress-db
@@ -19,21 +15,21 @@ spec:
         io.kompose.service: wordpress-db
     spec:
       containers:
-      - env:
+      - name: wordpress-db
+        image: biarms/mysql:5.5 # OK
+        #image: mysql/mysql-server:8.0-aarch64: NOK
+        #image: biarms/mysql:5.5.61-linux-aarch64: OK
+        ports:
+         - containerPort: 3306
+        env:
         - name: MYSQL_DATABASE
+          value: wordpress
+        - name: MYSQL_USER
           value: wordpress
         - name: MYSQL_PASSWORD_FILE
           value: /run/secrets/db-passwords/db-password-wordpress
         - name: MYSQL_ROOT_PASSWORD_FILE
           value: /run/secrets/db-passwords/db-password-root
-        - name: MYSQL_USER
-          value: wordpress
-        #image: mysql/mysql-server:8.0-aarch64: NOK
-        #image: biarms/mysql:5.5.61-linux-aarch64: OK
-        image: biarms/mysql:5.5 # OK
-        name: wordpress-db
-        ports:
-        - containerPort: 3306
         resources: {}
         volumeMounts:
         - mountPath: /var/lib/mysql
