@@ -11,4 +11,4 @@ spec:
       paths:
        - backend:
           serviceName: "gogs"
-          servicePort: 80
+          servicePort: 3000
