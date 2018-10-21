@@ -17,8 +17,8 @@ spec:
       containers:
       - name: wordpress-db
         image: biarms/mysql:5.5 # OK
+        #imagePullPolicy: Always
         #image: mysql/mysql-server:8.0-aarch64: NOK
-        #image: biarms/mysql:5.5.61-linux-aarch64: OK
         ports:
          - containerPort: 3306
         env:
