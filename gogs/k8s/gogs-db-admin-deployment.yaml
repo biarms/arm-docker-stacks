@@ -15,7 +15,7 @@ spec:
         io.kompose.service: gogs-db-admin
     spec:
       containers:
-      - image: biarms/pgadmin4:2.1
+      - image: biarms/pgadmin4:3.0
         name: gogs-db-admin
         ports:
         - containerPort: 5050
