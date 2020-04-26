@@ -1,11 +1,14 @@
-apiVersion: extensions/v1beta1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   labels:
     io.kompose.service: wordpress-phpmyadmin
   name: wordpress-phpmyadmin
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: wordpress-phpmyadmin
   strategy: {}
   template:
     metadata:

@@ -1,11 +1,14 @@
-apiVersion: extensions/v1beta1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
+  name: wordpress
   labels:
     io.kompose.service: wordpress
-  name: wordpress
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: wordpress
   strategy:
     type: Recreate
   template:

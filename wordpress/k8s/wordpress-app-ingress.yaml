@@ -6,7 +6,7 @@ metadata:
     io.kompose.service: wordpress
 spec:
   rules:
-  - host: "wordpress.okrhome.lan"
+  - host: "wordpress.local"
     http:
       paths:
        - backend:
