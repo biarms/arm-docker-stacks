@@ -20,6 +20,7 @@ spec:
       containers:
       - name: wordpress-db
         image: biarms/mysql:5.5 # OK
+        #image: mysql/mysql-server:5.7.30-1.1.16 #10.3.17 => don't have arm64 images for old version (arm64 only exist for 8.0)
         #imagePullPolicy: Always
         #image: mysql/mysql-server:8.0-aarch64: NOK
         ports:

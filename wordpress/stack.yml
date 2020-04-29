@@ -19,7 +19,7 @@ services:
       replicas: 1
 
   wordpress:
-    image: ${DOCKER_REGISTRY}biarms/wordpress:4.9.8
+    image: biarms/wordpress:5.4.0
     volumes:
       - htdocs:/var/www/html
     ports:
