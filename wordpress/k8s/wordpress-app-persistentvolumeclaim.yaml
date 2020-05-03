@@ -5,8 +5,9 @@ metadata:
     io.kompose.service: wordpress-htdocs
   name: wordpress-htdocs
 spec:
+  storageClassName: managed-nfs-storage-ssd
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi

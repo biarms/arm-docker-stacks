@@ -5,8 +5,9 @@ metadata:
     io.kompose.service: wordpress-db-data
   name: wordpress-db-data
 spec:
+  # storageClassName: managed-nfs-storage-hdd
   accessModes:
-  - ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 100Mi

@@ -4,14 +4,16 @@ metadata:
   labels:
     io.kompose.service: wordpress
   name: wordpress
+  # https://containo.us/blog/traefik-2-2-ingress/
+  annotations:
+    traefik.ingress.kubernetes.io/service.sticky: "true"
 spec:
-  type: NodePort
+  type: ClusterIP
+  # type: NodePort
   ports:
-  - name: "80"
-    port: 80
-    targetPort: 80
-    nodePort: 30080
+    - name: "80"
+      port: 80
+      targetPort: 80
+      # nodePort: 31080 # this setting could be use as a test to bypassing traefik reverse proxy (which solved the http/https issue)
   selector:
     io.kompose.service: wordpress
-status:
-  loadBalancer: {}

@@ -7,9 +7,9 @@ metadata:
 spec:
   clusterIP: None
   ports:
-  - name: mysql
-    port: 3306
-    targetPort: 3306
+    - name: mysql
+      port: 3306
+      targetPort: 3306
   selector:
     io.kompose.service: wordpress-db
 status:

@@ -4,13 +4,14 @@ metadata:
   labels:
     io.kompose.service: wordpress-phpmyadmin
   name: wordpress-phpmyadmin
+#  annotations:
+#    traefik.ingress.kubernetes.io/service.sticky: "true"
 spec:
-  type: NodePort
+  type: ClusterIP
   ports:
-  - name: "80"
-    port: 80
-    targetPort: 80
-    nodePort: 30090
+    - name: "80"
+      port: 80
+      targetPort: 80
   selector:
     io.kompose.service: wordpress-phpmyadmin
 status:

@@ -1,14 +1,14 @@
-apiVersion: extensions/v1beta1
 kind: Ingress
+apiVersion: networking.k8s.io/v1beta1
 metadata:
   name: wordpress-phpmyadmin
   labels:
     io.kompose.service: wordpress-phpmyadmin
 spec:
   rules:
-  - host: "wordpress-phpmyadmin.local"
-    http:
-      paths:
-       - backend:
-          serviceName: "wordpress-phpmyadmin"
-          servicePort: 80
+    - host: "phpmyadmin.wordpress.k8s.local"
+      http:
+        paths:
+          - backend:
+              serviceName: "wordpress-phpmyadmin"
+              servicePort: 80

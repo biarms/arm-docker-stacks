@@ -17,15 +17,21 @@ spec:
         io.kompose.service: wordpress-phpmyadmin
     spec:
       containers:
-      - env:
-        - name: PMA_HOST
-          value: wordpress-db
-        - name: PMA_PORT
-          value: "3306"
-        image: biarms/phpmyadmin:4.8.3
-        name: wordpress-phpmyadmin
-        ports:
-        - containerPort: 80
-        resources: {}
+        - env:
+            - name: PMA_HOST
+              value: wordpress-db
+            - name: PMA_PORT
+              value: "3306"
+          image: biarms/phpmyadmin:4.8.3
+          name: wordpress-phpmyadmin
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "32M"
+              cpu: "0.2"
+            limits:
+              memory: "64M"
+              cpu: "0.5"
       restartPolicy: Always
-status: {}
+

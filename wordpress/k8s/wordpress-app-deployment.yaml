@@ -6,6 +6,15 @@ metadata:
     io.kompose.service: wordpress
 spec:
   replicas: 1
+  # About the replicas settings:
+  #   Setting a value > 1 for the replicas is not a good idea, at least for the first installation: when a Wordpress pod is started for the first time and see an empty '/var/www/html' folder,
+  #   it launches the provisioning of that folder.
+  #   In that case, the logs of the first started pod will look like:
+  #     > WordPress not found in /var/www/html - copying now...
+  #   But the second pod will do the same, because there is no communication between both instance. In that case, the logs will look like:
+  #     > WordPress not found in /var/www/html - copying now...
+  #     > WARNING: /var/www/html is not empty! (copying anyhow)
+  #
   selector:
     matchLabels:
       io.kompose.service: wordpress
@@ -18,32 +27,53 @@ spec:
         io.kompose.service: wordpress
     spec:
       containers:
-      - env:
-        - name: WORDPRESS_DB_HOST
-          value: wordpress-db:3306
-        - name: WORDPRESS_DB_NAME
-          value: wordpress
-        - name: WORDPRESS_DB_PASSWORD_FILE
-          value: /run/secrets/db-passwords/db-password-wordpress
-        - name: WORDPRESS_DB_USER
-          value: wordpress
-        image: biarms/wordpress:5.4.0
-        name: wordpress
-        ports:
-        - containerPort: 80
-        resources: {}
-        volumeMounts:
-        - mountPath: /var/www/html
-          name: wordpress-htdocs
-        - mountPath: "/run/secrets/db-passwords"
-          name: wordpress-db-passwords
-          readOnly: true
+        - env:
+            - name: WORDPRESS_DB_HOST
+              value: wordpress-db:3306
+            - name: WORDPRESS_DB_NAME
+              value: wordpress
+            - name: WORDPRESS_DB_PASSWORD_FILE
+              value: /run/secrets/db-passwords/db-password-wordpress
+            - name: WORDPRESS_DB_USER
+              value: wordpress
+          image: biarms/wordpress:5.4.0
+          name: wordpress
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              memory: "96M" # 64M
+              cpu: "1"
+            limits:
+              memory: "192M" # 128M
+              cpu: "2"
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: wordpress-htdocs
+            - mountPath: "/run/secrets/db-passwords"
+              name: wordpress-db-passwords
+              readOnly: true
+            - name: php-ini-ext-volume
+              mountPath: /usr/local/etc/php/conf.d/upload_max_filesize.ini
+              subPath: upload_max_filesize.ini
       restartPolicy: Always
       volumes:
-      - name: wordpress-htdocs
-        persistentVolumeClaim:
-          claimName: wordpress-htdocs
-      - name: wordpress-db-passwords
-        secret:
-          secretName: wordpress-db-passwords
-status: {}
+        - name: wordpress-htdocs
+          persistentVolumeClaim:
+            claimName: wordpress-htdocs
+        - name: wordpress-db-passwords
+          secret:
+            secretName: wordpress-db-passwords
+        - name: php-ini-ext-volume
+          configMap:
+            name: php-ini-ext-config-map
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: php-ini-ext-config-map
+data:
+  upload_max_filesize.ini: |
+    # default upload_max_filesize is 2M
+    upload_max_filesize=64M
