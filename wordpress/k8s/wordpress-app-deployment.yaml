@@ -26,6 +26,18 @@ spec:
       labels:
         io.kompose.service: wordpress
     spec:
+      # If 2 replicats, don't put them on the same server !
+      # See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: io.kompose.service
+                    operator: In
+                    values:
+                      - wordpress
+              topologyKey: "kubernetes.io/hostname"
       containers:
         - env:
             - name: WORDPRESS_DB_HOST
@@ -42,20 +54,23 @@ spec:
             - containerPort: 80
           resources:
             requests:
-              memory: "96M" # 64M
-              cpu: "1"
+              memory: "128M" # 64M
+              cpu: "1.5"
             limits:
-              memory: "192M" # 128M
-              cpu: "2"
+              memory: "384M" #"256M" # "192M" # 128M
+              cpu: "4"
           volumeMounts:
             - mountPath: /var/www/html
               name: wordpress-htdocs
             - mountPath: "/run/secrets/db-passwords"
               name: wordpress-db-passwords
               readOnly: true
-            - name: php-ini-ext-volume
-              mountPath: /usr/local/etc/php/conf.d/upload_max_filesize.ini
-              subPath: upload_max_filesize.ini
+            - name: wordpress-config-volume
+              mountPath: /usr/local/etc/php/conf.d/php-ext.ini
+              subPath: php-ext.ini
+            - name: wordpress-debug-script-volume
+              mountPath: /var/www/html/debug.php
+              subPath: debug.php
       restartPolicy: Always
       volumes:
         - name: wordpress-htdocs
@@ -64,16 +79,36 @@ spec:
         - name: wordpress-db-passwords
           secret:
             secretName: wordpress-db-passwords
-        - name: php-ini-ext-volume
+        - name: wordpress-config-volume
           configMap:
-            name: php-ini-ext-config-map
-
+            name: wordpress-config
+        - name: wordpress-debug-script-volume
+          configMap:
+            name: wordpress-debug-script
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: php-ini-ext-config-map
+  name: wordpress-config
 data:
-  upload_max_filesize.ini: |
+  # Don't forget to restart the pod if you change these settings !
+  php-ext.ini: |
+    # See https://kinsta.com/fr/blog/http-error-wordpress/#increase-php-memory-limit
+    memory_limit = 320M
     # default upload_max_filesize is 2M
-    upload_max_filesize=64M
+    upload_max_filesize = 256M
+    # post_max_size. See https://wiki.iphoster.net/wiki/Apache_-_mod_fcgid:_stderr:_PHP_Warning:_POST_Content-Length_of_109393046_bytes_exceeds_the_limit_of_104857600_bytes
+    post_max_size = 256M
+    # https://stackoverflow.com/questions/5164930/fatal-error-maximum-execution-time-of-30-seconds-exceeded
+    max_execution_time = 300
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-debug-script
+data:
+  debug.php: |
+    <?php
+    echo 'good try'
+    //phpinfo();
+    ?>
