@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: wordpress-fpm
+  name: wordpress-fpm
+  # https://containo.us/blog/traefik-2-2-ingress/
+  # annotations:
+  #   traefik.ingress.kubernetes.io/service.sticky: "true"
+spec:
+  type: ClusterIP
+  ports:
+    - name: "9000"
+      port: 9000
+      targetPort: 9000
+  selector:
+    io.kompose.service: wordpress-fpm

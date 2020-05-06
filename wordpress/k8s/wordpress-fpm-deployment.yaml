@@ -1,0 +1,152 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: wordpress-fpm
+  labels:
+    io.kompose.service: wordpress-fpm
+spec:
+  replicas: 1
+  # About the replicas settings:
+  #   Setting a value > 1 for the replicas is not a good idea, at least for the first installation: when a Wordpress pod is started for the first time and see an empty '/var/www/html' folder,
+  #   it launches the provisioning of that folder.
+  #   In that case, the logs of the first started pod will look like:
+  #     > WordPress not found in /var/www/html - copying now...
+  #   But the second pod will do the same, because there is no communication between both instance. In that case, the logs will look like:
+  #     > WordPress not found in /var/www/html - copying now...
+  #     > WARNING: /var/www/html is not empty! (copying anyhow)
+  #
+  selector:
+    matchLabels:
+      io.kompose.service: wordpress-fpm
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: wordpress-fpm
+    spec:
+      # If 2 replicats, don't put them on the same server !
+      # See https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: io.kompose.service
+                    operator: In
+                    values:
+                      - wordpress-fpm
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+        - name: wordpress-fpm
+          image: wordpress:5.4.1-php7.4-fpm
+          ports:
+            - name: fpm-port
+              containerPort: 9000
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: wordpress-db:3306
+            - name: WORDPRESS_DB_NAME
+              value: wordpress
+            - name: WORDPRESS_DB_PASSWORD_FILE
+              value: /run/secrets/db-passwords/db-password-wordpress
+            - name: WORDPRESS_DB_USER
+              value: wordpress
+          resources:
+            requests:
+              memory: "256M" # 64M
+              cpu: "1"
+            limits:
+              memory: "512M" #"256M" # "192M" # 128M
+              cpu: "2"
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: wordpress-htdocs
+            - mountPath: "/run/secrets/db-passwords"
+              name: wordpress-db-passwords
+              readOnly: true
+            - name: wordpress-fpm-config-volume
+              mountPath: /usr/local/etc/php/conf.d/php-ext.ini
+              subPath: php-ext.ini
+            - name: wordpress-fpm-debug-script-volume
+              mountPath: /var/www/html/debug.php
+              subPath: debug.php
+          # Thanks to the startup probe, the application will have a maximum of 1 minute (30 * 2 = 60s) to finish its startup.
+          # Once the startup probe has succeeded once, the liveness probe takes over to provide a fast response to container deadlocks.
+          # If the startup probe never succeeds, the container is killed after 60s and subject to the pod’s restartPolicy
+          startupProbe:
+            failureThreshold: 30
+            periodSeconds: 2
+            tcpSocket:
+              port: 9000
+          livenessProbe:
+            failureThreshold: 2
+            periodSeconds: 3
+            tcpSocket:
+              port: 9000
+          #  exec:
+          #    command:
+          #      - cat
+          #      - /tmp/healthy
+          #
+          # Sometimes, applications are temporarily unable to serve traffic.
+          # For example, an application might need to load large data or configuration files during startup, or depend on external services after startup.
+          # In such cases, you don’t want to kill the application, but you don’t want to send it requests either.
+          # Kubernetes provides readiness probes to detect and mitigate these situations.
+          # A pod with containers reporting that they are not ready does not receive traffic through Kubernetes Services.
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 1
+            tcpSocket:
+              port: 9000
+      restartPolicy: Always
+      volumes:
+        - name: wordpress-htdocs
+          persistentVolumeClaim:
+            claimName: wordpress-htdocs
+        - name: wordpress-db-passwords
+          secret:
+            secretName: wordpress-db-passwords
+        - name: wordpress-fpm-config-volume
+          configMap:
+            name: wordpress-fpm-config
+        - name: wordpress-fpm-debug-script-volume
+          configMap:
+            name: wordpress-fpm-debug-script
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-fpm-config
+data:
+  # Don't forget to restart the pod if you change these settings !
+  # And don't encode the '!' in the comments of this section !!!
+  # See https://kinsta.com/fr/blog/http-error-wordpress/#increase-php-memory-limit
+  # memory_limit = 128M
+  # PHP memory_limit is per-script. See https://wordpress.org/support/topic/wp_memory_limit-in-config-php/
+  # With 128M: "NOTICE: PHP message: PHP Fatal error:  Allowed memory size of 2097152 bytes exhausted (tried to allocate 32768 bytes) in /var/www/html/wp-includes/pomo/mo.php on line 1"
+  # Don't forget to also edit the "wp-config.php" file to increate the WP_MEMORY_LIMIT
+  # define(‘WP_MEMORY_LIMIT’, ‘64M’); => this limit cannot exceed the PHP 'memory_limit'.
+  # According to the 'Server IP & Memory Usage Display' plugin, default is 40M
+  # default upload_max_filesize is 2M
+  # post_max_size. See https://wiki.iphoster.net/wiki/Apache_-_mod_fcgid:_stderr:_PHP_Warning:_POST_Content-Length_of_109393046_bytes_exceeds_the_limit_of_104857600_bytes
+  # It is also mandatory to increase the 'WP upload file size'. Consider the 'upload-max-file-size' plugin of Imagify (from Lyon, France ;) )
+  # https://stackoverflow.com/questions/5164930/fatal-error-maximum-execution-time-of-30-seconds-exceeded
+  # TODO: see if https://www.deltasight.fr/configurer-workers-php-fpm/ could improve this section
+  php-ext.ini: |
+    memory_limit = 256M
+    upload_max_filesize = 256M
+    post_max_size = 256M
+    max_execution_time = 300
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wordpress-fpm-debug-script
+data:
+  debug.php: |
+    <?php
+    //echo 'good try'
+    phpinfo();
+    ?>

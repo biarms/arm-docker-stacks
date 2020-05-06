@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: wordpress
+  name: wordpress
+  # https://containo.us/blog/traefik-2-2-ingress/
+  # annotations:
+  #  traefik.ingress.kubernetes.io/service.sticky: "true"
+spec:
+  type: ClusterIP
+  #type: NodePort
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+      # nodePort: 31080
+      # the 'NodePort' settings could be use as a test to bypass traefik reverse proxy.
+      # http://wordpress.k8s.local:31080/debug.php instead of http://wordpress.k8s.local:30080/debug.php for instance.
+      # But changing access also required to change the database backend (via phpmyadmin, for instance):
+      # UPDATE `wp_options` SET `option_value` = 'http://wordpress.k8s.local:31080' WHERE `wp_options`.`option_id` = 1
+  selector:
+    io.kompose.service: wordpress-nginx

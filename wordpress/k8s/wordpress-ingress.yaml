@@ -4,7 +4,8 @@ metadata:
   name: wordpress
   labels:
     io.kompose.service: wordpress
-  #annotations:
+  # annotations:
+  #   traefik.ingress.kubernetes.io/service.serversscheme: https
   #  kubernetes.io/ingress.class: traefik
   #  external-dns.alpha.kubernetes.io/hostname: *.mycompany.org#      http:
   #  traefik.ingress.kubernetes.io/router.entrypoints: web, websecure
@@ -13,31 +14,39 @@ metadata:
   #  nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: "wordpress.k8s.local"
+    - host: "wordpress.k8s.local" # Direct access to traefik on port 30080. IE: http://wordpress.k8s.local:30080/debug.php
       http:
         paths:
           - backend:
               serviceName: "wordpress"
               servicePort: 80
-    - host: "wordpress.k8s.synology.local"
+    - host: "wordpress.k8s.synology.local" # Access via the synology reverse proxy. IE: http://wordpress.k8s.synology.local/debug.php
       http:
         paths:
           - backend:
               serviceName: "wordpress"
               servicePort: 80
-    - host: "wordpress-test.k8s.synology.local"
-      http:
-        paths:
-          - backend:
-              serviceName: "wordpress"
-              servicePort: 80
-#    - host: "www.a-mon-tour.fr"
-#      http:
-#        paths:
-#          - backend:
-#              serviceName: "wordpress"
-#              servicePort: 80
+# NOK: :(
+# ---
+# apiVersion: extensions/v1beta1
+# kind: Ingress
+# metadata:
+#   name: wordpress-https
+#   labels:
+#     io.kompose.service: wordpress-https
+#   annotations:
+#     kubernetes.io/ingress.class: traefik
+#     traefik.ingress.kubernetes.io/service.serversscheme: https
+# spec:
+#   rules:
+#     - host: "www.a-mon-tour.fr"
+#       http:
+#         paths:
+#           - backend:
+#               serviceName: "wordpress"
+#               servicePort: 80
 ---
+# IngressRoute sample: https://docs.traefik.io/routing/providers/kubernetes-crd/#configuration-examples
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -47,18 +56,22 @@ spec:
     - web
     - websecure
   routes:
-    - match: Host(`www.a-mon-tour.fr`)
+    - match: Host(`secured-wordpress.k8s.synology.local`) || Host(`www.a-mon-tour.fr`)
+      # To test with https protocol:
+      # - via internal network only and untrusted certificate: https://secured-wordpress.k8s.synology.local:17443/debug.php
+      # - via internet: https://www.a-mon-tour.fr:18443/debug.php
       kind: Rule
       middlewares:
-        - name: wordpress-https-header-middleware
+        - name: "wordpress-https-header-middleware"
       services:
-        - name: wordpress
+        - name: "wordpress"
+          # scheme: https => Internal Server Error
           port: 80
 ---
 apiVersion: traefik.containo.us/v1alpha1
 kind: Middleware
 metadata:
-  name: wordpress-https-header-middleware
+  name: "wordpress-https-header-middleware"
 spec:
   headers:
     # Apparently, if Wordpress is access via 'http' behind a 'https' reverse proxy, Wordpress will use the 'X-Forwarded-Proto' header to generate html links. If unset, pages produces will mix http and https links.
