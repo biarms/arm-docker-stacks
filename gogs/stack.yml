@@ -12,10 +12,10 @@ services:
       replicas: 1
 
   gogs-postgres:
-    image: ${DOCKER_REGISTRY}postgres:10.2
+    image: ${DOCKER_REGISTRY}postgres:12.3-alpine
     environment:
       POSTGRES_USER: gogs
-      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_PASSWORD_FILE: /run/secrets/gogs-db-password
       POSTGRES_DB: gogs
     volumes:
      - gogs-db-data:/var/lib/postgresql/data
