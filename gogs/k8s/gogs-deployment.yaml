@@ -18,7 +18,7 @@ spec:
         io.kompose.service: gogs
     spec:
       containers:
-      - image: gogs/gogs-rpi
+      - image: gogs/gogs-rpi:0.11.91
         name: gogs
         ports:
         - containerPort: 22
