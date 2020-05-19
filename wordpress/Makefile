@@ -25,3 +25,6 @@ info: check
 	docker stack $(DOCKER_STACK_ARGS) ps $(DOCKER_STACK_ID)
 
 redeploy: undeploy deploy
+
+start-db-admin-ui:
+	docker service update --replicas 1 biarms-wordpress_wordpress-phpmyadmin

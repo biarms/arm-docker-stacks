@@ -63,7 +63,7 @@ services:
       - PMA_HOST=wordpress-db
       - PMA_PORT=3306
     deploy:
-      replicas: 1
+      replicas: 0
     # mem_reservation: 32m
     # mem_limit: 64m
    # https://hub.docker.com/r/arm32v6/adminer/
