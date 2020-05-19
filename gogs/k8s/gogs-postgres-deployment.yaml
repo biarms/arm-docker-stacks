@@ -1,11 +1,14 @@
-apiVersion: extensions/v1beta1
 kind: Deployment
+apiVersion: apps/v1
 metadata:
   labels:
     io.kompose.service: gogs-postgres
   name: gogs-postgres
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: gogs-postgres
   strategy:
     type: Recreate
   template:

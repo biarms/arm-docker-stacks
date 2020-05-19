@@ -6,7 +6,7 @@ metadata:
     io.kompose.service: gogs
 spec:
   rules:
-  - host: "gogs.okrhome.lan"
+  - host: "gogs.k8s.local"
     http:
       paths:
        - backend:
