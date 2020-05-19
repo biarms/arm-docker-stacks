@@ -54,4 +54,12 @@ If you are interested to test where we are, have a look to https://github.com/bi
        (ie: MYSQL_ROOT_PASSWORD_FILE)
  - [x] Deploy WordPress
  - [x] Focus on RPI1 + Odroid XU4 only (OrangePi + RPI2/3 should be OK, but were not tested)
+ 
+# Iteration 2
+ - [x] Deprecated (at least temporary) RPI1 support, because of 'docker pull' bug (version 19.03.8) for 'arm32v6' device with 'CPU architecture' set to 7.
+ - [x] Add [Gogs](https://gogs.io/) and [Portainer](https://www.portainer.io/) stacks
+ - [ ] Add amd64/x86_64 support
+ - [ ] Focus on arm32v7('Odroid XU4') and arm64v8('RPI3') only (OrangePi should be OK, but were not tested)
+ 
+# Iteration 3
  - [ ] Access point with hardcoded ip, not inside the docker container
