@@ -58,7 +58,7 @@ services:
     # container_name: wordpress-phpmyadmin
     image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.8.3
     ports:
-      - 9090:80
+      - 30090:80
     environment:
       - PMA_HOST=wordpress-db
       - PMA_PORT=3306
