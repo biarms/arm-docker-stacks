@@ -20,7 +20,7 @@ services:
       - portainer-admin-password
     ports:
       - "9000:9000"
-      - "8000:8000"
+      - "8000:8000" # needed for 'edge events'. See https://github.com/portainer/portainer-docs/issues/91
     volumes:
       - portainer_data:/data
     networks:
