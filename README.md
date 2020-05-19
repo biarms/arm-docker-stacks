@@ -20,6 +20,8 @@ Currently, the work is in progress, and we are far for where we want to go.
 But we started anyway to publish some first alpha project, just in case other people wants to joint ;)
 In that case, don't hesitate to contact the Brother In Arms's project team via project.biarms@gmail.com.
 
+If you are interested to test where we are, have a look to https://github.com/biarms/bootstrap.
+
 # Road Map
 ## Setup an 'infra' layer that will offer basic services:
 1. Setup a pi with wifi and access point (first wlan -> connect the network, second wlan: provide an access point)
