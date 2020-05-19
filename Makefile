@@ -6,28 +6,24 @@ default: deploy
 check:
 	@which docker > /dev/null || (echo "docker utility must be in your path." && exit 1)
 
+deploy-portainer: check
+	cd portainer && make deploy
+
+undeploy-portainer: check
+	cd portainer && make undeploy
+
 deploy-wordpress: check
-	# docker-compose pull -f stack.yml
-	docker pull "${DOCKER_REGISTRY}biarms/mysql:5.5"
-	docker pull "${DOCKER_REGISTRY}biarms/wordpress:4.9.2"
-	cd wordpress \
-	&& docker stack deploy -c stack.yml wordpress \
-	&& cd ..
+	cd wordpress && make deploy
 
 undeploy-wordpress: check
-	docker stack rm wordpress
+	cd wordpress && make undeploy
 
-info-wordpress: check
-	docker stack ps wordpress
+deploy-gogs: check
+	cd gogs && make deploy
 
-redeploy-wordpress: undeploy-wordpress deploy-wordpress
+undeploy-gogs: check
+	cd gogs && make undeploy
 
+deploy: deploy-portainer deploy-wordpress deploy-gogs
 
-
-deploy: deploy-wordpress
-
-redeploy: redeploy-wordpress
-
-undeploy: undeploy-wordpress
-
-info: info-wordpress
+undeploy: undeploy-gogs undeploy-wordpress undeploy-portainer
