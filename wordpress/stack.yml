@@ -1,8 +1,8 @@
-version: '3.4'
+version: '3.8'
 
 services:
   wordpress-db:
-    container_name: wordpress-db
+    # container_name: wordpress-db
     image: ${DOCKER_REGISTRY}biarms/mysql:5.7 #.60-linux-arm32v6 #5.5 is for backward compatibility with RPI1 (arm32v6). 5.7 is maybe better for RPI2 or RPI3 (arm32v7)
     volumes:
       - db-data:/var/lib/mysql
@@ -16,13 +16,14 @@ services:
     secrets:
       - db-root-password
       - db-password
-    #deploy:
-    #  replicas: 1
+    deploy:
+      replicas: 1
+    # NOK: "mem_limit: Set resource limits using deploy.resources" error...
     #mem_reservation: 256m
     #mem_limit: 512m
 
   wordpress-fpm:
-    container_name: wordpress-fpm
+    # container_name: wordpress-fpm
     image: biarms/wordpress:5.4.1-php7.3-fpm-alpine
     volumes:
       - htdocs:/var/www/html
@@ -41,28 +42,28 @@ services:
     #mem_limit: 512m #128m
 
   wordpress-ngnix:
-    container_name: wordpress-ngnix
+    # container_name: wordpress-ngnix
     image: nginx
     volumes:
       - ./nginx-conf.d/:/etc/nginx/conf.d/
       - htdocs:/var/www/html:ro
     ports:
-      - 80
-    #deploy:
-    #  replicas: 1
+      - 30080:80
+    deploy:
+      replicas: 1
     #mem_reservation: 16m
     #mem_limit: 24m
 
   wordpress-phpmyadmin:
-    container_name: wordpress-phpmyadmin
+    # container_name: wordpress-phpmyadmin
     image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.8.3
     ports:
-      - 80
+      - 9090:80
     environment:
       - PMA_HOST=wordpress-db
       - PMA_PORT=3306
-    #deploy:
-    #  replicas: 0
+    deploy:
+      replicas: 1
     # mem_reservation: 32m
     # mem_limit: 64m
    # https://hub.docker.com/r/arm32v6/adminer/
