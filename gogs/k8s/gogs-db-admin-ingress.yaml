@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: gogs-db-admin
+  labels:
+    io.kompose.service: gogs
+spec:
+  rules:
+  - host: "pgadmin.gogs.k8s.local"
+    http:
+      paths:
+       - backend:
+          serviceName: "gogs-db-admin"
+          servicePort: 5050

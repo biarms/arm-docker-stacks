@@ -5,12 +5,13 @@ metadata:
     io.kompose.service: gogs-db-admin
   name: gogs-db-admin
 spec:
-  type: NodePort
+  clusterIP: None
+  # type: NodePort
   ports:
-  - name: "5050"
+  - name: pgadmin
     port: 5050
     targetPort: 5050
-    nodePort: 30550
+    # nodePort: 30550
   selector:
     io.kompose.service: gogs-db-admin
 status:

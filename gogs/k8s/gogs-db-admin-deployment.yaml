@@ -5,7 +5,7 @@ metadata:
     io.kompose.service: gogs-db-admin
   name: gogs-db-admin
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       io.kompose.service: gogs-db-admin
