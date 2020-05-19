@@ -40,7 +40,7 @@ spec:
               topologyKey: "kubernetes.io/hostname"
       containers:
         - name: wordpress-fpm
-          image: wordpress:5.4.1-php7.4-fpm
+          image: wordpress:5.4.1-php7.3-fpm-alpine
           ports:
             - name: fpm-port
               containerPort: 9000
