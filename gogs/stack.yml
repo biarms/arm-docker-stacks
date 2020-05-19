@@ -7,7 +7,7 @@ services:
      - gogs-data:/data
     ports:
      - 10022:22
-     - 3000
+     - 33000:3000
     deploy:
       replicas: 1
 
@@ -31,7 +31,7 @@ services:
     volumes:
      - gogs-pgadmin-data:/pgadmin
     ports:
-     - 5050
+     - 35050:5050
     deploy:
       replicas: 0
 
