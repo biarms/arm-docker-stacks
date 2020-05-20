@@ -8,8 +8,8 @@ services:
     # - /etc/timezone:/etc/timezone:ro
     # - /etc/localtime:/etc/localtime:ro
     ports:
-     - 30022:22
-     - 33000:3000
+     - 32022:22
+     - 32090:3000
     deploy:
       replicas: 1
 
@@ -33,7 +33,7 @@ services:
     volumes:
      - gogs-pgadmin-data:/pgadmin
     ports:
-     - 35050:5050
+     - 32090:5050
     deploy:
       replicas: 0
 

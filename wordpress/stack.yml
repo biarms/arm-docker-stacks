@@ -6,8 +6,8 @@ services:
     image: ${DOCKER_REGISTRY}biarms/mysql:5.7.30
     volumes:
       - db-data:/var/lib/mysql
-    ports:
-      - 3306
+    # ports:
+    #   - 3306
     environment:
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
       MYSQL_DATABASE: wordpress
@@ -27,8 +27,8 @@ services:
     image: biarms/wordpress:5.4.1-php7.3-fpm-alpine
     volumes:
       - htdocs:/var/www/html
-    ports:
-      - 9000
+    # ports:
+    #   - 9000
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
@@ -48,7 +48,7 @@ services:
       - ./nginx-conf.d/:/etc/nginx/conf.d/
       - htdocs:/var/www/html:ro
     ports:
-      - 30080:80
+      - 31080:80
     deploy:
       replicas: 1
     #mem_reservation: 16m
@@ -58,7 +58,7 @@ services:
     # container_name: wordpress-phpmyadmin
     image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.7.7
     ports:
-      - 30090:80
+      - 31090:80
     environment:
       - PMA_HOST=wordpress-db
       - PMA_PORT=3306

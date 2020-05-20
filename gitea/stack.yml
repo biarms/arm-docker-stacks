@@ -11,9 +11,9 @@ services:
       - DB_HOST=gitea-db:5432
       - DB_NAME=gitea
       - DB_USER=gitea
-      - SSH_PORT=43022 # SSH port displayed in clone URL.
+      - SSH_PORT=33022 # SSH port displayed in clone URL.
       - SSH_LISTEN_PORT=22 # Port for the built-in SSH server.
-      - ROOT_URL=http://localhost:43000/ #
+      - ROOT_URL=http://localhost:33080/ #
       - USER_UID=1000
       - USER_GID=1000
     env_file:
@@ -23,8 +23,8 @@ services:
       # - /etc/timezone:/etc/timezone:ro
       # - /etc/localtime:/etc/localtime:ro
     ports:
-      - "43022:22"
-      - "43000:3000"
+      - "33022:22"
+      - "33080:3000"
     deploy:
       replicas: 1
     # cpus: 0.9
@@ -49,12 +49,12 @@ services:
     # mem_reservation: 4m
     # mem_limit: 32m
 
-  gogs-db-admin:
+  gitea-db-admin:
     image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
     volumes:
       - gitea-db-admin-data:/pgadmin
     ports:
-      - 45050:5050
+      - 33090:5050
     deploy:
       replicas: 0
 
