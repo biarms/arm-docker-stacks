@@ -1,7 +1,7 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  gogs:
+  gogs-app:
     image: ${DOCKER_REGISTRY}biarms/gogs:0.11.91
     volumes:
      - gogs-data:/data
@@ -9,11 +9,11 @@ services:
     # - /etc/localtime:/etc/localtime:ro
     ports:
      - 32022:22
-     - 32090:3000
+     - 32080:3000
     deploy:
       replicas: 1
 
-  gogs-postgres:
+  gogs-db:
     image: ${DOCKER_REGISTRY}postgres:12.3-alpine
     environment:
       POSTGRES_USER: gogs
@@ -22,16 +22,18 @@ services:
     volumes:
      - gogs-db-data:/var/lib/postgresql/data
     # ports:
-    #  - 5432
+    #  - 32432:5432
     secrets:
      - gogs-db-password
     deploy:
       replicas: 1
+    depends_on:
+      - gogs-db
 
   gogs-db-admin:
     image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
     volumes:
-     - gogs-pgadmin-data:/pgadmin
+     - gogs-db-admin-data:/pgadmin
     ports:
      - 32090:5050
     deploy:
@@ -40,7 +42,7 @@ services:
 volumes:
   gogs-data:
   gogs-db-data:
-  gogs-pgadmin-data:
+  gogs-db-admin-data:
 
 secrets:
   gogs-db-password:

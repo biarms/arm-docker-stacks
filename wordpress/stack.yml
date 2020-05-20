@@ -2,20 +2,19 @@ version: '3.8'
 
 services:
   wordpress-db:
-    # container_name: wordpress-db
     image: ${DOCKER_REGISTRY}biarms/mysql:5.7.30
     volumes:
-      - db-data:/var/lib/mysql
+      - wordpress-db-data:/var/lib/mysql
     # ports:
-    #   - 3306
+    #   - 31306:3306
     environment:
-      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db-root-password
       MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/wordpress-db-root-password
       MYSQL_USER: wordpress
-      MYSQL_PASSWORD_FILE: /run/secrets/db-password
+      MYSQL_PASSWORD_FILE: /run/secrets/wordpress-db-password
     secrets:
-      - db-root-password
-      - db-password
+      - wordpress-db-root-password
+      - wordpress-db-password
     deploy:
       replicas: 1
     # NOK: "mem_limit: Set resource limits using deploy.resources" error...
@@ -23,30 +22,28 @@ services:
     #mem_limit: 512m
 
   wordpress-fpm:
-    # container_name: wordpress-fpm
     image: biarms/wordpress:5.4.1-php7.3-fpm-alpine
     volumes:
-      - htdocs:/var/www/html
+      - wordpress-htdocs:/var/www/html
     # ports:
-    #   - 9000
+    #   - 31900:9000
     environment:
       WORDPRESS_DB_HOST: wordpress-db:3306
       WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db-password
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/wordpress-db-password
       WORDPRESS_DB_NAME: wordpress
     secrets:
-      - db-password
+      - wordpress-db-password
     deploy:
       replicas: 1
     #mem_reservation: 256m #64m
     #mem_limit: 512m #128m
 
   wordpress-ngnix:
-    # container_name: wordpress-ngnix
     image: nginx
     volumes:
       - ./nginx-conf.d/:/etc/nginx/conf.d/
-      - htdocs:/var/www/html:ro
+      - wordpress-htdocs:/var/www/html:ro
     ports:
       - 31080:80
     deploy:
@@ -69,14 +66,12 @@ services:
    # https://hub.docker.com/r/arm32v6/adminer/
 
 volumes:
-  db-data:
-  htdocs:
+  wordpress-db-data:
+  wordpress-htdocs:
 
 # Inspired by https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose
 secrets:
-  db-password:
+  wordpress-db-password:
     file: db-password.txt
-  db-root-password:
+  wordpress-db-root-password:
     file: db-root-password.txt
-
-# Next steps: create a cluster (see https://severalnines.com/blog/mysql-docker-introduction-docker-swarm-mode-and-multi-host-networking)

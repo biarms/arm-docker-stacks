@@ -31,4 +31,4 @@ start-db-admin-ui:
 	docker service update --replicas 1 biarms-gogs_gogs-db-admin
 
 remove-volumes:
-	docker volume rm biarms-gogs_gogs-data biarms-gogs_gogs-db-data biarms-gogs_gogs-pgadmin-data || true
+	docker volume rm biarms-gogs_gogs-data biarms-gogs_gogs-db-data biarms-gogs_gogs-db-admin-data || true

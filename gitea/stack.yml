@@ -41,6 +41,8 @@ services:
       - POSTGRES_DB=gitea
     volumes:
       - gitea-db-data:/var/lib/postgresql/data
+    # ports:
+    #  - 33432:5432
     secrets:
       - gitea-db-password
     deploy:
