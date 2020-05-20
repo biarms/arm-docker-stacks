@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   gogs:
-    image: ${DOCKER_REGISTRY}gogs/gogs-rpi:0.11.91
+    image: ${DOCKER_REGISTRY}biarms/gogs:0.11.91
     volumes:
      - gogs-data:/data
     ports:
