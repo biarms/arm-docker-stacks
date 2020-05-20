@@ -3,7 +3,7 @@ version: '3.8'
 services:
   wordpress-db:
     # container_name: wordpress-db
-    image: ${DOCKER_REGISTRY}biarms/mysql:5.7.30 #.60-linux-arm32v6 #5.5 is for backward compatibility with RPI1 (arm32v6). 5.7 is maybe better for RPI2 or RPI3 (arm32v7)
+    image: ${DOCKER_REGISTRY}biarms/mysql:5.7.30
     volumes:
       - db-data:/var/lib/mysql
     ports:
