@@ -24,6 +24,12 @@ deploy-gogs: check
 undeploy-gogs: check
 	cd gogs && make undeploy
 
-deploy: deploy-portainer deploy-wordpress deploy-gogs
+deploy-gitea: check
+	cd gitea && make deploy
 
-undeploy: undeploy-gogs undeploy-wordpress undeploy-portainer
+undeploy-gitea: check
+	cd gitea && make undeploy
+
+deploy: deploy-portainer deploy-wordpress deploy-gitea
+
+undeploy: undeploy-gitea undeploy-wordpress undeploy-portainer

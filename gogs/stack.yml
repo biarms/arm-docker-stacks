@@ -5,8 +5,10 @@ services:
     image: ${DOCKER_REGISTRY}biarms/gogs:0.11.91
     volumes:
      - gogs-data:/data
+    # - /etc/timezone:/etc/timezone:ro
+    # - /etc/localtime:/etc/localtime:ro
     ports:
-     - 10022:22
+     - 30022:22
      - 33000:3000
     deploy:
       replicas: 1
@@ -19,8 +21,8 @@ services:
       POSTGRES_DB: gogs
     volumes:
      - gogs-db-data:/var/lib/postgresql/data
-    ports:
-      - 5432
+    # ports:
+    #  - 5432
     secrets:
      - gogs-db-password
     deploy:
