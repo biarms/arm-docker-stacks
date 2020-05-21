@@ -53,7 +53,7 @@ services:
 
   wordpress-phpmyadmin:
     # container_name: wordpress-phpmyadmin
-    image: ${DOCKER_REGISTRY}biarms/phpmyadmin:4.7.7
+    image: ${DOCKER_REGISTRY}biarms/phpmyadmin:5.0.2
     ports:
       - 31090:80
     environment:
