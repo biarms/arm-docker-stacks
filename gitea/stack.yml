@@ -52,11 +52,15 @@ services:
     # mem_limit: 32m
 
   gitea-db-admin:
-    image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
+    #image: dpage/pgadmin4:4.21
+    image: ${DOCKER_REGISTRY}biarms/pgadmin4:4.21
+    #environment:
+    #  - PGADMIN_DEFAULT_EMAIL=root@local
+    #  - PGADMIN_DEFAULT_PASSWORD=changeit
     volumes:
       - gitea-db-admin-data:/pgadmin
     ports:
-      - 33090:5050
+      - 33090:80
     deploy:
       replicas: 0
 

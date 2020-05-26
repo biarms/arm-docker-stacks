@@ -31,7 +31,7 @@ services:
       - gogs-db
 
   gogs-db-admin:
-    image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
+    image: ${DOCKER_REGISTRY}biarms/pgadmin4:4.21
     volumes:
      - gogs-db-admin-data:/pgadmin
     ports:
