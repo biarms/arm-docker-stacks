@@ -60,7 +60,8 @@ services:
     volumes:
       - gitea-db-admin-data:/pgadmin
     ports:
-      - 33090:80
+    #  - 33090:80
+      - 33090:5050
     deploy:
       replicas: 0
 
