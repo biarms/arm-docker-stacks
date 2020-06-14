@@ -1,8 +1,9 @@
 version: '3.7'
-services: 
-  autowlan:
+services:
+  biarms-access-point:
     container_name: biarms-access-point
     image: biarms/access-point
+    build: ../../../access-point
     cap_add: 
       - NET_ADMIN
     stop_grace_period: 2m
