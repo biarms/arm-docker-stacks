@@ -1,0 +1,11 @@
+version: '3.7'
+services: 
+  autowlan:
+    container_name: biarms-access-point
+    image: biarms/access-point
+    cap_add: 
+      - NET_ADMIN
+    stop_grace_period: 2m
+    network_mode: "host"
+    volumes: 
+      - ./etc/hostapd/hostapd-wpa2.conf:/etc/hostapd/hostapd.conf
