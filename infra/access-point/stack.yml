@@ -1,7 +1,6 @@
 version: '3.7'
 services:
   biarms-access-point:
-    container_name: biarms-access-point
     image: biarms/access-point:0.0.2
     # build: ../../../access-point
     cap_add: 
