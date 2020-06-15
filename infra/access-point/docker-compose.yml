@@ -8,5 +8,7 @@ services:
       - NET_ADMIN
     stop_grace_period: 2m
     network_mode: "host"
-    volumes: 
+    volumes:
+      - ./etc/dhcp/dhcpd.conf:/etc/dhcp/dhcpd.conf
       - ./etc/hostapd/hostapd-wpa2.conf:/etc/hostapd/hostapd.conf
+      - ./etc/network/interfaces:/etc/network/interfaces
