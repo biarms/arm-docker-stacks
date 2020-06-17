@@ -1,4 +1,4 @@
-SHELL=bash
+SHELL=sh
 # NOK on linux: .SHELLFLAGS=-e
 
 DOCKER_STACK_ID=biarms-gitea

@@ -1,4 +1,4 @@
-SHELL=bash
+SHELL=sh
 # NOK on linux: .SHELLFLAGS=-e
 
 default: deploy
