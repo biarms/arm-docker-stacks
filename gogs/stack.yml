@@ -1,43 +1,49 @@
-version: '3.4'
+version: '3.8'
 
 services:
-  gogs:
-    image: ${DOCKER_REGISTRY}gogs/gogs-rpi
+  gogs-app:
+    image: ${DOCKER_REGISTRY}biarms/gogs:0.11.91
     volumes:
      - gogs-data:/data
+    # - /etc/timezone:/etc/timezone:ro
+    # - /etc/localtime:/etc/localtime:ro
     ports:
-     - 10022:22
-     - 3000
+     - 32022:22
+     - 32080:3000
     deploy:
       replicas: 1
 
-  postgres:
-    image: ${DOCKER_REGISTRY}postgres:10.2
+  gogs-db:
+    image: ${DOCKER_REGISTRY}postgres:12.3-alpine
     environment:
       POSTGRES_USER: gogs
-      POSTGRES_PASSWORD_FILE: /run/secrets/db-password
+      POSTGRES_PASSWORD_FILE: /run/secrets/gogs-db-password
       POSTGRES_DB: gogs
     volumes:
-     - db-data:/var/lib/postgresql/data
+     - gogs-db-data:/var/lib/postgresql/data
+    # ports:
+    #  - 32432:5432
     secrets:
-     - db-password
+     - gogs-db-password
     deploy:
       replicas: 1
+    depends_on:
+      - gogs-db
 
-  db-admin:
-    image: ${DOCKER_REGISTRY}biarms/pgadmin4:2.1
+  gogs-db-admin:
+    image: ${DOCKER_REGISTRY}biarms/pgadmin4:4.21
     volumes:
-     - pgadmin-data:/pgadmin
+     - gogs-db-admin-data:/pgadmin
     ports:
-     - 5050
+     - 32090:5050
     deploy:
       replicas: 0
 
 volumes:
   gogs-data:
-  db-data:
-  pgadmin-data:
+  gogs-db-data:
+  gogs-db-admin-data:
 
 secrets:
-  db-password:
+  gogs-db-password:
     file: db-password.txt

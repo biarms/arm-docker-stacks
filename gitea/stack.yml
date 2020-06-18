@@ -1,0 +1,75 @@
+# Inspired by https://docs.gitea.io/en-us/install-with-docker/
+
+version: '3.8'
+
+services:
+  gitea-app:
+    image: ${DOCKER_REGISTRY}gitea/gitea:1.11.5 #latest (see https://hub.docker.com/r/gitea/gitea/tags)
+    environment: # See https://docs.gitea.io/en-us/install-with-docker/
+      - RUN_MODE=prod
+      - DB_TYPE=postgres
+      - DB_HOST=gitea-db:5432
+      - DB_NAME=gitea
+      - DB_USER=gitea
+      - SSH_PORT=33022 # SSH port displayed in clone URL.
+      - SSH_LISTEN_PORT=22 # Port for the built-in SSH server.
+      - ROOT_URL=http://localhost:33080/ #
+      - USER_UID=1000
+      - USER_GID=1000
+    env_file:
+      - db-password.env # for DB_PASSWD=******
+    volumes:
+      - gitea-app-data:/data
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "33022:22"
+      - "33080:3000"
+    deploy:
+      replicas: 1
+    # cpus: 0.9
+    # mem_reservation: 64m
+    # mem_limit: 256m
+    depends_on:
+      - gitea-db
+
+  gitea-db:
+    image: ${DOCKER_REGISTRY}postgres:12.3-alpine # See https://hub.docker.com/_/postgres?tab=tags
+    environment:
+      - POSTGRES_USER=gitea
+      - POSTGRES_PASSWORD_FILE=/run/secrets/gitea-db-password
+      - POSTGRES_DB=gitea
+    volumes:
+      - gitea-db-data:/var/lib/postgresql/data
+    # ports:
+    #  - 33432:5432
+    secrets:
+      - gitea-db-password
+    deploy:
+      replicas: 1
+    # cpus: 0.9
+    # mem_reservation: 4m
+    # mem_limit: 32m
+
+  gitea-db-admin:
+    #image: dpage/pgadmin4:4.21
+    image: ${DOCKER_REGISTRY}biarms/pgadmin4:4.21
+    #environment:
+    #  - PGADMIN_DEFAULT_EMAIL=root@local
+    #  - PGADMIN_DEFAULT_PASSWORD=changeit
+    volumes:
+      - gitea-db-admin-data:/pgadmin
+    ports:
+    #  - 33090:80
+      - 33090:5050
+    deploy:
+      replicas: 0
+
+volumes:
+  gitea-app-data:
+  gitea-db-data:
+  gitea-db-admin-data:
+
+secrets:
+  gitea-db-password:
+    file: db-password.txt

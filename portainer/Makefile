@@ -1,20 +1,22 @@
 SHELL=sh
 # NOK on linux: .SHELLFLAGS=-e
 
-DOCKER_STACK_ID=biarms-wordpress
+DOCKER_STACK_ID=biarms-portainer
 DOCKER_STACK_ARGS=--orchestrator=swarm
 
 default: deploy
+
+purge: undeploy remove-volumes
 
 check:
 	@which docker > /dev/null || (echo "docker utility must be in your path." && exit 1)
 	@which pwgen > /dev/null || (echo "pwgen utility must be in your path to generate passwords." && exit 2)
 
 createSecret: check
-	if [ ! -f db-password.txt ] ; then pwgen -1 32 > db-password.txt; fi
-	if [ ! -f db-root-password.txt ] ; then pwgen -1 32 > db-root-password.txt; fi
+	if [ ! -f portainer-password.txt ] ; then pwgen -1 32 > portainer-password.txt; fi
 
 deploy: createSecret
+	# curl -L https://downloads.portainer.io/portainer-agent-stack.yml -o stack.yml
 	docker stack $(DOCKER_STACK_ARGS) deploy -c stack.yml $(DOCKER_STACK_ID)
 
 undeploy: check
@@ -26,5 +28,5 @@ info: check
 
 redeploy: undeploy deploy
 
-start-db-admin-ui:
-	docker service update --replicas 1 biarms-wordpress_wordpress-phpmyadmin
+remove-volumes:
+	docker volume rm biarms-portainer_portainer-data || true
