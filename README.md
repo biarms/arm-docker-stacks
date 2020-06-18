@@ -50,19 +50,32 @@ If you are interested to test where we are, have a look to https://github.com/bi
 4. Use 'secret_file' instead of env variable or secret variable to store secrets (SHOULD)
 5. When possible, Dockerfile should be based on 'alpine:3.11.6' (alternative: every biarms rebuild image SHOULD inherit from the same base image, to reduce disk usage)
 
-## Releases
-### Iteration 1
+## Release-Notes - Roadmap
+### Iteration 1 (v0.0.1)
  - [x] Build Mysql and WordPress image with the 'arm' architecture flag on (needed for swarm), supporting '_file' extension
        (ie: MYSQL_ROOT_PASSWORD_FILE)
  - [x] Deploy WordPress
  - [x] Focus on RPI1 + Odroid XU4 only (OrangePi + RPI2/3 should be OK, but were not tested)
  
-### Iteration 2
- - [x] Deprecated (at least temporary) RPI1 support, because of 'docker pull' bug (version 19.03.8) for 'arm32v6' device with 'CPU architecture' set to 7. See 
+### Iteration 2 (v0.0.1)
+ - [x] Deprecated (at least temporary) RPI1 support, because of 'docker pull' bug (version 19.03.8) for 'arm32v6' device with 'CPU architecture' set to 7. 
+       See https://github.com/biarms/mysql/issues/4 -> https://github.com/moby/moby/issues/41017 -> https://github.com/moby/moby/issues/34875
  - [x] Add [Gogs](https://gogs.io/) and [Portainer](https://www.portainer.io/) stacks
- - [x] Add [Gitea](https://gitea.io/) stacks, but only for arm64v8 and arm64 platform ()
+ - [x] Add [Gitea](https://gitea.io/) stacks, but only for arm64v8 and arm64 platform (Gogs should be used for older/smaller devices)
  - [x] Add amd64/x86_64 support
- - [ ] Focus on arm32v7('Odroid XU4') and arm64v8('RPI3') only (OrangePi should be OK, but were not tested)
- 
+ - [x] Focus on arm32v7('Odroid XU4') and arm64v8('RPI3') only (OrangePi should be OK, but were not tested)
+ - [x] Create an Wifi access point docker container (with hardcoded ip)
+ - [x] Create a stack to start [Portainer.io](https://www.portainer.io/)
+
 ### Iteration 3
- - [ ] Access point with hardcoded ip, not inside the docker container
+ - [ ] Create a stack to install [Nextcloud](https://nextcloud.com/) 
+ - [ ] Create an UI application to help people to install these tools
+ - [ ] Create a bootable image embbeding this UI application (base on ubuntu-20.04-aarch64 ?) that should run on RPI3 and RPI4
+
+## Next steps (?)
+ - [ ] Also create a bootable image for other arm devices
+ - [ ] Create a git repo per stack
+ - [ ] Add more funny arm based and open-source stacks (ie: shairport-sync)
+
+## Releases
+See https://github.com/biarms/arm-docker-stacks/releases
