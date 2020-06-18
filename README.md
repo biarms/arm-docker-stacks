@@ -57,7 +57,7 @@ If you are interested to test where we are, have a look to https://github.com/bi
  - [x] Deploy WordPress
  - [x] Focus on RPI1 + Odroid XU4 only (OrangePi + RPI2/3 should be OK, but were not tested)
  
-### Iteration 2 (v0.0.1)
+### Iteration 2 (v0.0.2)
  - [x] Deprecated (at least temporary) RPI1 support, because of 'docker pull' bug (version 19.03.8) for 'arm32v6' device with 'CPU architecture' set to 7. 
        See https://github.com/biarms/mysql/issues/4 -> https://github.com/moby/moby/issues/41017 -> https://github.com/moby/moby/issues/34875
  - [x] Add [Gogs](https://gogs.io/) and [Portainer](https://www.portainer.io/) stacks
