@@ -68,7 +68,7 @@ If you are interested to test where we are, have a look to https://github.com/bi
  - [x] Create a stack to start [Portainer.io](https://www.portainer.io/)
 
 ### Iteration 3
- - [ ] Create a stack to install [Nextcloud](https://nextcloud.com/) 
+ - [x] Create a stack to install [Nextcloud](https://nextcloud.com/) 
  - [ ] Create an UI application to help people to install these tools
  - [ ] Create a bootable image embbeding this UI application (base on ubuntu-20.04-aarch64 ?) that should run on RPI3 and RPI4
 
