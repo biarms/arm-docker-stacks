@@ -31,7 +31,7 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
       - NEXTCLOUD_ADMIN_USER=admin
       - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/admin_password
-      - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1,0.0.0.0,biarms,biarms.local
+      - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1 0.0.0.0 biarms biarms.local
     depends_on:
       - nextcloud-db
     networks:
