@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  nextcloud-db:
+    #container_name: nextcloud_db
+    image: library/postgres:12.3-alpine
+    #restart: unless-stopped
+    volumes:
+      - nextcloud-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+    networks:
+      - nextcloud-network
+    secrets:
+      - db_password
+    #mem_reservation: 4m
+    #mem_limit: 32m
+
+  nextcloud-app:
+    #container_name: nextcloud_app
+    image: library/nextcloud:19-fpm-alpine #14-fpm #14.0.4.2 # Caution: upgrade from n to n+2 is not supported !
+    #restart: unless-stopped
+    volumes:
+      - nextcloud-web:/var/www/html
+    environment:
+      - POSTGRES_HOST=nextcloud-db
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD_FILE=/run/secrets/admin_password
+      - NEXTCLOUD_TRUSTED_DOMAINS=127.0.0.1,0.0.0.0,biarms,biarms.local
+    depends_on:
+      - nextcloud-db
+    networks:
+      - nextcloud-network
+    secrets:
+      - db_password
+      - admin_password
+    #mem_reservation: 48m
+    #mem_limit: 128m
+
+  nextcloud-web:
+    #container_name: nextcloud_web
+    #build: ./web
+    #restart: unless-stopped
+    image: library/nginx:1.19.0-alpine # See https://hub.docker.com/_/nginx?tab=description
+    volumes:
+      - ./nginx-conf.d/:/etc/nginx/conf.d/
+      - nextcloud-web:/var/www/html:ro
+    ports:
+      - 34080:80
+    depends_on:
+      - nextcloud-app
+    networks:
+      - nextcloud-network
+    #mem_reservation: 4m
+    #mem_limit: 8m #64m
+
+  nextcloud-db-admin:
+    image: biarms/pgadmin4:4.21
+    volumes:
+      - nextcloud-db-admin-data:/pgadmin
+    ports:
+      - 34090:5050
+    deploy:
+      replicas: 0
+
+networks:
+  nextcloud-network:
+    driver: overlay
+    attachable: true
+
+volumes:
+  nextcloud-web:
+  nextcloud-db:
+  nextcloud-db-admin-data:
+
+# Inspired by https://docs.docker.com/engine/swarm/secrets/#use-secrets-in-compose
+secrets:
+  admin_password:
+    file: ./admin-password.txt
+  db_password:
+    file: ./db-password.txt
