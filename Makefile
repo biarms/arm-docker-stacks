@@ -36,6 +36,6 @@ deploy-owncloud: check
 undeploy-owncloud: check
 	cd owncloud && make undeploy
 
-deploy: deploy-portainer deploy-wordpress deploy-gitea deploy-owncloud
+deploy: deploy-portainer deploy-owncloud
 
-undeploy: undeploy-gitea undeploy-wordpress undeploy-portainer undeploy-owncloud
+undeploy: undeploy-owncloud undeploy-portainer
