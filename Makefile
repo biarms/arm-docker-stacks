@@ -30,6 +30,12 @@ deploy-gitea: check
 undeploy-gitea: check
 	cd gitea && make undeploy
 
-deploy: deploy-portainer deploy-wordpress deploy-gitea
+deploy-owncloud: check
+	cd owncloud && make deploy
 
-undeploy: undeploy-gitea undeploy-wordpress undeploy-portainer
+undeploy-owncloud: check
+	cd owncloud && make undeploy
+
+deploy: deploy-portainer deploy-wordpress deploy-gitea deploy-owncloud
+
+undeploy: undeploy-gitea undeploy-wordpress undeploy-portainer undeploy-owncloud
